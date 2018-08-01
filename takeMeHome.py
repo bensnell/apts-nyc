@@ -303,7 +303,7 @@ def scrapeCL():
 	# For each apartment, retrieve the listing and get information for an rss feed
 	for i in range(len(allApts)):
 
-		print("Retrieved listing for " + str(i) " / " + str(len(allApts)) + " apts")
+		print("Retrieved listing for " + str(i) + " / " + str(len(allApts)) + " apts")
 
 		# get the webpage
 		text = requests.get(allApts[i][0], stream=False).text
