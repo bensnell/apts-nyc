@@ -159,7 +159,7 @@ def removeMatches(inList, refList, indexKeys, threshold):
 
 				bAllSimilar = True
 				for index in indexKeys:
-					bSimilar = similarity(a, b) > threshold
+					bSimilar = similarity(a[index], b[index]) > threshold
 					bAllSimilar = bAllSimilar and bSimilar
 					if not bAllSimilar:
 						break
@@ -370,8 +370,11 @@ def process():
 	# Save the old and new ones to file
 	saveCsv(selectApts, csvPath)
 
-	# Separate listings into represented hoods
+	# Get all neighborhoods
 	feeds = {}
+	for key, value in bounds.items():
+		feeds[ value ] = []
+	# Separate listings into represented hoods
 	for apt in selectApts:
 		if apt[9] in feeds:
 			feeds[ apt[9] ].append( apt )
@@ -387,6 +390,7 @@ def process():
 		saveFeed(value, key, uploadName)
 
 		uploads.append(saveFolder + "/" + filename)
+	uploads.append(csvFilename)
 
 	# Upload these files to github
 	repo = Repo("../" + repoName)
@@ -396,4 +400,4 @@ def process():
 	origin.push()
 
 
-# process()
+process()
