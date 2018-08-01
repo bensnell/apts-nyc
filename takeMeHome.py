@@ -279,10 +279,11 @@ def scrapeCL():
 	allApts = []
 
 	# Iterate through all possible apartments
-	for i in range(0, 3000, 120):
+	maxSearch = 3000
+	for i in range(0, maxSearch, 120):
 
 		if i % 100 == 0:
-			print("Got CL Apartments " + str(i) + " / 3000")
+			print("Got CL Apartments " + str(i) + " / " + str(maxSearch))
 		
 		# Get the html text
 		text = requests.get(urlCL(i), stream=False).text
