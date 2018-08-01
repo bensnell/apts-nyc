@@ -8,6 +8,7 @@ import re
 from datetime import datetime
 from difflib import SequenceMatcher
 from feedgen.feed import FeedGenerator
+from git import Repo
 
 minPrice = 1720
 maxPrice = 2500
@@ -26,6 +27,7 @@ saveFolder = "feeds"
 
 # Url to which rss feeds are exported
 githubRepoURL = "https://raw.githubusercontent.com/bensnell/apts-nyc/master/"
+repoName = "apts-nyc"
 
 # Tool: https://codepen.io/jhawes/pen/ujdgK
 bOneHoodPerListing = True
@@ -102,7 +104,7 @@ def loadCsv(path):
 	if (os.path.exists(path)):
 		with open(path, 'r') as fin:
 			data = fin.readlines()
-			listOut = [x.strip("\t") for x in data]
+			listOut = [[i.strip("\n") for i in x.split("\t")] for x in data]
 	return listOut
 
 # Save (append if exists) a tab csv from a 2d array
@@ -247,16 +249,21 @@ def saveFeed(listings, title, path):
 		e = fg.add_entry()
 		
 		e.id( apt[0] )
-		e.title( "$" + apt[1] + " - " + apt[4] )
+		e.title( "$" + apt[1] + "  //  " + apt[4] )
 		e.link( href=apt[0] )
 
 		text = ""
 		if apt[5] != "":
-			text += "<img src=\"" + apt[5].split(" ")[0] + "\" /> "
-		text += "<p>" + apt[8] + "</p>"
+			imgs = apt[5].split(" ")
+			for i in range(len(imgs)):
+				text += "<img src=\"" + imgs[i] + "\" /> "
+				if i == 0:
+					text += "<p>" + apt[8] + "</p>"
+		else:
+			text += "<p>" + apt[8] + "</p>"
 		e.content( type="html", content=text )
 
-
+		# This doesn't seem to work:
 		e.pubDate( datetime2RSSString(clDate(apt[2])) )
 		e.updated( datetime2RSSString(clDate(apt[2])) )
 
@@ -375,12 +382,18 @@ def process():
 	uploads = []
 	for key, value in feeds.items():
 
-		uploadName = saveFolderPath + "/" + key + ".xml"
+		filename = key + ".xml"
+		uploadName = saveFolderPath + "/" + filename
 		saveFeed(value, key, uploadName)
 
-	# Upload these file to github
-	
+		uploads.append(saveFolder + "/" + filename)
+
+	# Upload these files to github
+	repo = Repo("../" + repoName)
+	repo.index.add(uploads)
+	repo.index.commit("Updated feeds")
+	origin = repo.remote('origin')
+	origin.push()
 
 
-
-process()
+# process()
