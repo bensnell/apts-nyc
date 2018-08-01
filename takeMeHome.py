@@ -280,6 +280,8 @@ def scrapeCL():
 
 	# Iterate through all possible apartments
 	for i in range(0, 3000, 120):
+
+		print("Getting CL Apartments beginning with " + str(i))
 		
 		# Get the html text
 		text = requests.get(urlCL(i), stream=False).text
@@ -293,11 +295,15 @@ def scrapeCL():
 	# Remove duplicates
 	allApts = list(set(allApts))
 
+	print("Removed Duplicates")
+
 	# Convert into a list of lists (instead of tuples)
 	allApts = [list(i) for i in allApts]
 
 	# For each apartment, retrieve the listing and get information for an rss feed
 	for i in range(len(allApts)):
+
+		print("Retrieved listing for " + str(i) " / " + str(len(allApts)) + " apts")
 
 		# get the webpage
 		text = requests.get(allApts[i][0], stream=False).text
@@ -332,11 +338,17 @@ def scrapeCL():
 
 def process():
 
+	print("Starting a new process...")
+
 	# Get all craigslist apartments
 	allApts = scrapeCL();
 
+	print("Scraped all CL Apartments")
+
 	# Only take the ones that have been posted in the last 72 hrs
 	allApts = [i for i in allApts if elapsedTimeHrs(clDate(i[2])) <= timeRangeHrs]
+
+	print("Removed apartments < 3 days")
 
 	# Only take the ones that have a location within the neighborhoods set already
 	selectApts = []
@@ -358,21 +370,33 @@ def process():
 				if bOneHoodPerListing:
 					break
 
+	print("Narrowed down to specific hoods")
+
 	# Sort by date to get the newest first
 	selectApts.sort(key=lambda d: clDate(d[2]))
 	selectApts.reverse()
 
+	print("Sorted by date ", len(selectApts))
+
 	# Load those apartments that have already been saved
 	oldApts = loadCsv(csvPath)
+
+	print("Loaded old apartments: ", len(oldApts))
 
 	# Compare the new ones to the old ones for any matches and remove repeats
 	selectApts = removeMatches(selectApts, oldApts, [4, 8], 0.95)
 
+	print("Removed matches ", len(selectApts))
+
 	# Remove duplicate listings (with the same title and body)
 	selectApts = removeDuplicates(selectApts, [4, 8], 0.95)
 
+	print("Removed self duplicates ", len(selectApts))
+
 	# Save the old and new ones to file
 	saveCsv(selectApts, csvPath)
+
+	print("Saved new apts to file")
 
 	# Get all neighborhoods
 	feeds = {}
@@ -396,6 +420,8 @@ def process():
 		uploads.append(saveFolder + "/" + filename)
 	uploads.append(csvFilename)
 
+	print("Exported all to RSS Feeds")
+
 	# Upload these files to github
 	repo = Repo("../" + repoName)
 	repo.index.add(uploads)
@@ -403,15 +429,23 @@ def process():
 	origin = repo.remote('origin')
 	origin.push()
 
+	print("Exported all to github")
+
 while True:
+
+	print("Starting Process ------------------------")
 
 	# Run code
 	start = time.time()
 	process()
 	stop = time.time()
 
+	print("Ending Process ------------------------Waiting...")
+
 	# Get duration in seconds
 	duration = stop - start
 
 	# Wait for no more than 15 minutes
 	time.sleep(max(refreshMin*60 - duration, 0))
+
+	print("... Done waiting")
