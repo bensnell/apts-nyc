@@ -434,7 +434,7 @@ def process():
 	print("Exported all to github")
 
 	for apt in selectApts:
-		print("\tNew Apartment added: " + apt[0])
+		print("\tNew Apartment added: " + apt[0] + " in " + apt[9])
 
 while True:
 
