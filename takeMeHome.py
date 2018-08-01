@@ -281,7 +281,8 @@ def scrapeCL():
 	# Iterate through all possible apartments
 	for i in range(0, 3000, 120):
 
-		print("Getting CL Apartments beginning with " + str(i))
+		if i % 100 == 0:
+			print("Got CL Apartments " + str(i) + " / 3000")
 		
 		# Get the html text
 		text = requests.get(urlCL(i), stream=False).text
@@ -430,6 +431,9 @@ def process():
 	origin.push()
 
 	print("Exported all to github")
+
+	for apt in selectApts:
+		print("\tNew Apartment added: " + apt[0])
 
 while True:
 
