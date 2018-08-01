@@ -282,8 +282,7 @@ def scrapeCL():
 	maxSearch = 3000
 	for i in range(0, maxSearch, 120):
 
-		if i % 100 == 0:
-			print("Got CL Apartments " + str(i) + " / " + str(maxSearch))
+		print("Got CL Apartments " + str(i) + " / " + str(maxSearch))
 		
 		# Get the html text
 		text = requests.get(urlCL(i), stream=False).text
@@ -305,7 +304,8 @@ def scrapeCL():
 	# For each apartment, retrieve the listing and get information for an rss feed
 	for i in range(len(allApts)):
 
-		print("Retrieved listing for " + str(i) + " / " + str(len(allApts)) + " apts")
+		if i % 100 == 0
+			print("Retrieved listing for " + str(i) + " / " + str(len(allApts)) + " apts")
 
 		# get the webpage
 		text = requests.get(allApts[i][0], stream=False).text
