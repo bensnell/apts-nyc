@@ -31,7 +31,7 @@ githubRepoURL = "https://raw.githubusercontent.com/bensnell/apts-nyc/master/"
 repoName = "apts-nyc"
 
 # Refresh Minutes
-refreshMin = 15
+refreshMin = 20
 
 # Tool: https://codepen.io/jhawes/pen/ujdgK
 bOneHoodPerListing = True
