@@ -9,6 +9,7 @@ from datetime import datetime
 from difflib import SequenceMatcher
 from feedgen.feed import FeedGenerator
 from git import Repo
+import time
 
 minPrice = 1720
 maxPrice = 2500
@@ -28,6 +29,9 @@ saveFolder = "feeds"
 # Url to which rss feeds are exported
 githubRepoURL = "https://raw.githubusercontent.com/bensnell/apts-nyc/master/"
 repoName = "apts-nyc"
+
+# Refresh Minutes
+refreshMin = 15
 
 # Tool: https://codepen.io/jhawes/pen/ujdgK
 bOneHoodPerListing = True
@@ -275,7 +279,7 @@ def scrapeCL():
 	allApts = []
 
 	# Iterate through all possible apartments
-	for i in range(0, 120, 120):
+	for i in range(0, 3000, 120):
 		
 		# Get the html text
 		text = requests.get(urlCL(i), stream=False).text
@@ -399,5 +403,15 @@ def process():
 	origin = repo.remote('origin')
 	origin.push()
 
+while True:
 
-process()
+	# Run code
+	start = time.time()
+	process()
+	stop = time.time()
+
+	# Get duration in seconds
+	duration = stop - start
+
+	# Wait for no more than 15 minutes
+	time.sleep(max(refreshMin*60 - duration, 0))
