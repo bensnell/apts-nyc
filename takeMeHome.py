@@ -296,10 +296,16 @@ def scrapeCL():
 	# Remove duplicates
 	allApts = list(set(allApts))
 
-	print("Removed Duplicates")
+	print("Removed Duplicates, now only: ", len(allApts))
 
 	# Convert into a list of lists (instead of tuples)
 	allApts = [list(i) for i in allApts]
+
+	# Load the csv to remove any of the post ID's
+	oldApts = loadCsv(csvPath)
+	allApts = removeMatches(allApts, oldApts, [3], 0.99)
+
+	print("Removed matches, now only: ", len(allApts));
 
 	# For each apartment, retrieve the listing and get information for an rss feed
 	for i in range(len(allApts)):
