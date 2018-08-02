@@ -279,7 +279,7 @@ def scrapeCL():
 	allApts = []
 
 	# Iterate through all possible apartments
-	maxSearch = 1000
+	maxSearch = 360
 	for i in range(0, maxSearch, 120):
 
 		print("Got CL Apartments " + str(i) + " / " + str(maxSearch))
