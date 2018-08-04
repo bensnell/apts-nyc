@@ -12,13 +12,13 @@ from git import Repo
 import time
 
 minPrice = 1720
-maxPrice = 2500
-minBeds = 2
+maxPrice = 2700
+minBeds = 1
 maxBeds = None
 bHasPic = True
 
 # Only focus on the last __ hrs
-timeRangeHrs = 24*3
+timeRangeHrs = 24*5
 
 # File to which data is stored
 csvFilename = "listings.txt"
@@ -279,7 +279,7 @@ def scrapeCL():
 	allApts = []
 
 	# Iterate through all possible apartments
-	maxSearch = 360
+	maxSearch = 3000
 	for i in range(0, maxSearch, 120):
 
 		print("Got CL Apartments " + str(i) + " / " + str(maxSearch))
