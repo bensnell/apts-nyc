@@ -18,7 +18,7 @@ maxBeds = None
 bHasPic = True
 
 # Only focus on the last __ hrs
-timeRangeHrs = 24*5
+timeRangeHrs = 24*3
 
 # File to which data is stored
 csvFilename = "listings.txt"
@@ -32,6 +32,9 @@ repoName = "apts-nyc"
 
 # Refresh Minutes
 refreshMin = 20
+
+# Maximum number of apartments to retrieve (takes a long time to get a ton)
+maxAptsToSearch = 1200
 
 # Tool: https://codepen.io/jhawes/pen/ujdgK
 bOneHoodPerListing = True
@@ -279,7 +282,7 @@ def scrapeCL():
 	allApts = []
 
 	# Iterate through all possible apartments
-	maxSearch = 360
+	maxSearch = maxAptsToSearch
 	for i in range(0, maxSearch, 120):
 
 		print("Got CL Apartments " + str(i) + " / " + str(maxSearch))
@@ -314,7 +317,9 @@ def scrapeCL():
 			print("Retrieved listing for " + str(i) + " / " + str(len(allApts)) + " apts")
 
 		# get the webpage
+		print("Getting " + allApts[i][0])
 		text = requests.get(allApts[i][0], stream=False).text
+		print("\tGot " + allApts[i][0])
 
 		# Get all the images' urls and separate them by spaces
 		obj = [i for i in re.findall(r'\"(https://images.craigslist.org/.*?)\"', text, re.I | re.M | re.S) if "600x450" in i]
@@ -392,7 +397,7 @@ def process():
 	print("Loaded old apartments: ", len(oldApts))
 
 	# Compare the new ones to the old ones for any matches and remove repeats
-	selectApts = removeMatches(selectApts, oldApts, [4, 8], 0.95)
+	selectApts = removeMatches(selectApts, oldApts, [4, 8], 0.5)
 
 	print("Removed matches ", len(selectApts))
 
