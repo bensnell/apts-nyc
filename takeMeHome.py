@@ -36,6 +36,9 @@ refreshMin = 20
 # Maximum number of apartments to retrieve (takes a long time to get a ton)
 maxAptsToSearch = 1200
 
+# Timeout in seconds
+timeoutSec = 3
+
 # Tool: https://codepen.io/jhawes/pen/ujdgK
 bOneHoodPerListing = True
 bounds = {}
@@ -288,7 +291,7 @@ def scrapeCL():
 		print("Got CL Apartments " + str(i) + " / " + str(maxSearch))
 		
 		# Get the html text
-		text = requests.get(urlCL(i), stream=False).text
+		text = requests.get(urlCL(i), stream=False, timeout=timeoutSec).text
 
 		# parse into a list
 		obj = re.findall(r'\<a href=\"(https://newyork.craigslist.org/.*?)\".*?\<span class=\"result-price\"\>\$(.*?)\</span\>.*?datetime=\"(.*?)\".*?data-id=\"(.*?)\" class=\"result-title hdrlnk\"\>(.*?)\</a\>', text, re.I | re.M | re.S)
@@ -318,7 +321,7 @@ def scrapeCL():
 
 		# get the webpage
 		print("Getting " + allApts[i][0])
-		text = requests.get(allApts[i][0], stream=False).text
+		text = requests.get(allApts[i][0], stream=False, timeout=timeoutSec).text
 		print("\tGot " + allApts[i][0])
 
 		# Get all the images' urls and separate them by spaces
