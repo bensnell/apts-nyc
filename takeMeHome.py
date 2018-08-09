@@ -34,7 +34,7 @@ repoName = "apts-nyc"
 refreshMin = 20
 
 # Maximum number of apartments to retrieve (takes a long time to get a ton)
-maxAptsToSearch = 1200
+maxAptsToSearch = 3000
 
 # Timeout in seconds
 timeoutSec = 3
@@ -320,9 +320,12 @@ def scrapeCL():
 			print("Retrieved listing for " + str(i) + " / " + str(len(allApts)) + " apts")
 
 		# get the webpage
-		print("Getting " + allApts[i][0])
-		text = requests.get(allApts[i][0], stream=False, timeout=timeoutSec).text
-		print("\tGot " + allApts[i][0])
+		# print("Getting " + allApts[i][0])
+		try:
+			text = requests.get(allApts[i][0], stream=False, timeout=timeoutSec).text
+		except:
+			print("Unable to retrieve the url: " + allApts[i][0])
+		# print("\tGot " + allApts[i][0])
 
 		# Get all the images' urls and separate them by spaces
 		obj = [i for i in re.findall(r'\"(https://images.craigslist.org/.*?)\"', text, re.I | re.M | re.S) if "600x450" in i]
