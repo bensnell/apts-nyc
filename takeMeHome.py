@@ -291,7 +291,12 @@ def scrapeCL():
 		print("Got CL Apartments " + str(i) + " / " + str(maxSearch))
 		
 		# Get the html text
-		text = requests.get(urlCL(i), stream=False, timeout=timeoutSec).text
+		text = ""
+		try:
+			text = requests.get(urlCL(i), stream=False, timeout=timeoutSec).text
+		except:
+			print("Unable to retrieve the url: " + allApts[i][0])
+			continue
 
 		# parse into a list
 		obj = re.findall(r'\<a href=\"(https://newyork.craigslist.org/.*?)\".*?\<span class=\"result-price\"\>\$(.*?)\</span\>.*?datetime=\"(.*?)\".*?data-id=\"(.*?)\" class=\"result-title hdrlnk\"\>(.*?)\</a\>', text, re.I | re.M | re.S)
@@ -321,10 +326,12 @@ def scrapeCL():
 
 		# get the webpage
 		# print("Getting " + allApts[i][0])
+		text = ""
 		try:
 			text = requests.get(allApts[i][0], stream=False, timeout=timeoutSec).text
 		except:
 			print("Unable to retrieve the url: " + allApts[i][0])
+			continue
 		# print("\tGot " + allApts[i][0])
 
 		# Get all the images' urls and separate them by spaces
