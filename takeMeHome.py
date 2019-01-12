@@ -391,19 +391,22 @@ def process():
 
 		# Check whether this one is in any of the neighborhoods
 		for key, value in bounds.items():
-			if inside_polygon(apt[6], apt[7], list(key)):
+			try:
+				if inside_polygon(apt[6], apt[7], list(key)):
 
-				# Add the hood
-				apt.append(value)
+					# Add the hood
+					apt.append(value)
 
-				# Save this into select
-				selectApts.append(apt)
+					# Save this into select
+					selectApts.append(apt)
 
-				# print(apt[4], apt[-1], apt[0])
+					# print(apt[4], apt[-1], apt[0])
 
-				# one to one mapping
-				if bOneHoodPerListing:
-					break
+					# one to one mapping
+					if bOneHoodPerListing:
+						break
+			except:
+				print("Unknown Error")
 
 	print("Narrowed down to specific hoods")
 
