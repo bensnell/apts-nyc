@@ -408,6 +408,7 @@ def process():
 			except Exception as e:
 				print(e)
 				print("Concerning listing " + apt[0])
+				print("All info: ", apt)
 
 	print("Narrowed down to specific hoods")
 
