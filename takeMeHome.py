@@ -405,8 +405,9 @@ def process():
 					# one to one mapping
 					if bOneHoodPerListing:
 						break
-			except:
-				print("Unknown Error")
+			except Exception as e:
+				print(e)
+				print("Concerning listing " + apt[0])
 
 	print("Narrowed down to specific hoods")
 
