@@ -11,20 +11,11 @@ from feedgen.feed import FeedGenerator
 from git import Repo
 import time
 
-# ==============================
-#       User Parameters
-#      Please set these!
-# ==============================
-
 minPrice = 1720
 maxPrice = 2700
 minBeds = 1
 maxBeds = None
 bHasPic = True
-
-# ===============================
-#      Nothing to see here!
-# ===============================
 
 # Only focus on the last __ hrs
 timeRangeHrs = 24*3
